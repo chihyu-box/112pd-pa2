@@ -587,8 +587,8 @@ void Floorplanner::preSA() {
         buildContourLine();
         Area = reportArea();
         HPWL = reportHPWL();
-        avgArea += Area/N;
-        avgHPWL += HPWL/N;
+        avgArea += Area;
+        avgHPWL += HPWL;
         newCost = reportCost();
         avgCostDiff = (avgCostDiff + abs(newCost-oldCost)/N);
         oldCost = reportCost();
@@ -605,9 +605,9 @@ void Floorplanner::SA() {
     uniform_int_distribution<> method(0, 2);
     uniform_real_distribution<> prob(0.0, 1.0);
 
-    double Ts = 10;
+    double Ts = 0.1;
     T = Ts;
-    double freeze = 0.001;
+    double freeze = 0.00001;
     double lamda = 0.99;
     int N = 500;
 
@@ -706,6 +706,11 @@ inline double Floorplanner::reportCost() {
     // return 3*(1-alpha)*(HPWL/avgHPWL) + pow(_outline[1]/_outline[0] - maxHeight/maxWidth, 2);
     // if(bestCost == INT_MAX) return (Area/avgArea) + pow(_outline[1]/_outline[0] - maxHeight/maxWidth, 2);
     // return alpha*(Area/avgArea) + (1-alpha)*(HPWL/avgHPWL) + pow(_outline[1]/_outline[0] - maxHeight/maxWidth, 2);
+    
+// cout << "Area " << Area << endl;
+// cout << "avgArea " << avgArea << endl;
+    // return alpha*(Area/avgArea) + pow(_outline[1]/_outline[0] - maxHeight/maxWidth, 2);
+
     return alpha*(Area/avgArea) + (1-alpha)*(HPWL/avgHPWL) + pow(_outline[1]/_outline[0] - maxHeight/maxWidth, 2);
 }
 
